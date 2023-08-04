@@ -83,7 +83,7 @@ to_tibble <- function(table) {
     lapply(FUN = \(x) stri_remove_empty(x)) %>%
     as_tibble_col() %>%
     unnest_wider(col = value, names_sep = "_") %>%
-    mutate(value_2 = parse_number(value_2), value_3 = parse_number(value_3, )) %>%
+    mutate(value_2 = parse_number(value_2), value_3 = parse_number(value_3)) %>%
     rename(name = value_1, remuneration = value_2, expenses = value_3)
 }
 
