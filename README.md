@@ -7,3 +7,7 @@ The University of British Columbia (UBC) releases financial statements each year
 The financial reports can be found here: <https://finance.ubc.ca/reporting-planning-analysis/financial-reports>
 
 The data itself is not stored in this repo, and will have to be downloaded from the above link. The code mapping the PDF tables into tibbles is provided [here](https://github.com/awakenedhaki/ubc-financial-statement-2022/blob/master/R/cleaning.R).
+
+At a high-level, the data collection and preprocessing pipeline is:
+
+![Data Pipeline](assets/data-flow.svg)
