@@ -152,4 +152,4 @@ remunerations %>%
 remunerations %>%
   bind_rows() %>%
   filter(!is.na(remuneration)) %>%
-  write_csv(here("data", "processed_remunerations.csv"))
+  write_csv(here("data", "cleaned_remunerations.csv"))
