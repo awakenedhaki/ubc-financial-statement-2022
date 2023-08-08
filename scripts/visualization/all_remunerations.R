@@ -35,7 +35,7 @@ remuneration_histogram <- remunerations %>%
 ggsave(filename = "all_remuneration_distribution.svg",
        path = here("figures"),
        plot = remuneration_histogram, device = "svg",
-       width = 4,  height = 10, units = "in", scale = 1, dpi = 300)
+       width = 10,  height = 4, units = "in", scale = 1, dpi = 300)
 
 # # Benford's Law
 benford <- remunerations %>%
@@ -51,4 +51,4 @@ benford <- remunerations %>%
 ggsave(filename = "all_remuneration_benford.svg",
        path = here("figures"),
        plot = benford, device = "svg",
-       width = 4,  height = 10, units = "in", scale = 1, dpi = 300)
+       width = 7,  height = 3, units = "in", scale = 1, dpi = 300)
