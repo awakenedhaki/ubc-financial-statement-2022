@@ -26,7 +26,7 @@ NEXT_PAGE = "pager-next"
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
-    filename="scraping.log",
+    filename="research_supervisor_scraping.log",
     filemode="a",
 )
 console = logging.StreamHandler()
