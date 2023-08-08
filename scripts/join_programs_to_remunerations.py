@@ -3,8 +3,6 @@ import json
 import pandas as pd
 
 from pathlib import Path
-from itertools import groupby
-from operator import itemgetter
 from collections import defaultdict
 
 
@@ -23,9 +21,6 @@ ubc_grad_programs = pd.read_csv(UBC_GRAD_PROGRAMS)
 
 
 # Helper Functions
-first_character = itemgetter(0)
-
-
 def invert_supervisors_by_program(programs):
     programs_by_supervisor = defaultdict(list)
     for program, supervisors in programs.items():
