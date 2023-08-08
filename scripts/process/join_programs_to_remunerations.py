@@ -7,7 +7,7 @@ from collections import defaultdict
 
 
 # Constants
-DATA = Path(__file__).parents[1] / "data"
+DATA = Path(__file__).parents[2] / "data"
 REMUNERATIONS = DATA / "processed" / "all_remunerations.csv"
 UBC_GRAD_PROGRAMS = DATA / "processed" / "programs.csv"
 SUPERVISORS = DATA / "references" / "supervisors_by_program.json"
@@ -55,6 +55,7 @@ if __name__ == "__main__":
         .apply(lambda name: "\t".join(specializations_by_supervisor[name]))
     )
 
-    remunerations[["name", "remuneration", "expenses", "appointment"]].to_csv(
-        DATA / "processed" / "supervisor_remunerations.csv"
-    )
+    supervisor_flag = remunerations["appointment"].apply(lambda value: value != "")
+    remunerations[["name", "remuneration", "expenses", "appointment"]].loc[
+        supervisor_flag
+    ].to_csv(DATA / "processed" / "supervisor_remunerations.csv")
