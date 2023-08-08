@@ -57,5 +57,9 @@ if __name__ == "__main__":
     remunerations["appointment"] = (
         remunerations["name"]
         .str.casefold()
-        .apply(lambda name: specializations_by_supervisor[name])
+        .apply(lambda name: "\t".join(specializations_by_supervisor[name]))
+    )
+
+    remunerations[["name", "remuneration", "expenses", "appointment"]].to_csv(
+        DATA / "supervisor_remunerations.csv"
     )
