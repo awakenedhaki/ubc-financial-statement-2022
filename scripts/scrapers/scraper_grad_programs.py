@@ -3,7 +3,7 @@ import pandas as pd
 from pathlib import Path
 
 # Constants
-DATA = Path(__file__).parents[1] / "data"
+DATA = Path(__file__).parents[2] / "data"
 N_PAGES = 4
 BASE_URL = "https://www.grad.ubc.ca"
 UBC_GRAD_PROGRAMS = "/prospective-students/graduate-degree-programs"

@@ -14,7 +14,7 @@ from collections import defaultdict
 # Constants
 SLEEP_TIME = 3
 
-DATA = Path(__file__).parents[1] / "data"
+DATA = Path(__file__).parents[2] / "data"
 UBC_PROGRAMS = DATA / "ubc_grad_programs.csv"
 
 BASE_URL = "https://www.grad.ubc.ca"
