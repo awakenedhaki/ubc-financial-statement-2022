@@ -31,16 +31,16 @@ def invert_supervisors_by_program(programs):
 
 
 def collapsing_programs_to_specialization(supervisors):
-    specialization_by_supervisor = defaultdict(list)
+    specializations_by_supervisor = defaultdict(list)
     for supervisor, programs in supervisors.items():
-        specialization_by_supervisor[supervisor] = (
+        specializations_by_supervisor[supervisor] = (
             ubc_grad_programs[ubc_grad_programs["program_page"].isin(programs)][
                 "specialization"
             ]
             .unique()
             .tolist()
         )
-    return specialization_by_supervisor
+    return specializations_by_supervisor
 
 
 # Main Function
