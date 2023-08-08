@@ -15,12 +15,12 @@ from collections import defaultdict
 SLEEP_TIME = 3
 
 DATA = Path(__file__).parents[2] / "data"
-UBC_PROGRAMS = DATA / "ubc_grad_programs.csv"
+UBC_PROGRAMS = DATA / "references" / "ubc_grad_programs.csv"
 
 BASE_URL = "https://www.grad.ubc.ca"
 RESEARCHERS_VIEW = "view-researcher-lists"
 CONTENT_VIEW = "view-content"
-NEXT_PAGE = "pager_next"
+NEXT_PAGE = "pager-next"
 
 # Configure logging
 logging.basicConfig(
@@ -101,8 +101,8 @@ def scrape_supervisors(url):
 
         next_page_path = soup.find(attrs={"class": NEXT_PAGE})
         if next_page_path is not None:
-            program_url = BASE_URL + next_page_path.a["href"]
-            logging.info(f"Scraping next page: {program_url}")
+            url = BASE_URL + next_page_path.a["href"]
+            logging.info(f"Scraping next page: {url}")
         else:
             next_page = False
         sleep(SLEEP_TIME)
