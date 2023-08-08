@@ -37,4 +37,4 @@ table[["Program Name", "Program Page"]] = pd.DataFrame(
 
 # Saving Data
 print("Saving tables...")
-table.to_csv(DATA / "ubc_grad_programs.csv", index=False)
+table.to_csv(DATA / "raw" / "ubc_grad_programs.csv", index=False)

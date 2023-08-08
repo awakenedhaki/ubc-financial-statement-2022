@@ -123,7 +123,7 @@ def main():
         supervisors = scrape_supervisors(program_url)
         supervisors_by_program[program] = supervisors
 
-    with (DATA / "supervisors_by_program.json").open(mode="w") as f:
+    with (DATA / "clean" / "supervisors_by_program.json").open(mode="w") as f:
         json.dump(supervisors_by_program, fp=f)
 
 

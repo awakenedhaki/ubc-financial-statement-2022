@@ -4,7 +4,7 @@ library(janitor)
 library(tidyverse)
 
 # Constants ====================================================================
-UBC_GRAD_PROGRAMS <- here("data", "ubc_grad_programs.csv")
+UBC_GRAD_PROGRAMS <- here("data", "raw", "ubc_grad_programs.csv")
 
 # Loading Data =================================================================
 programs <- read_csv(UBC_GRAD_PROGRAMS)
@@ -17,4 +17,4 @@ cleaned_programs <- programs %>%
           regex = "(.*) \\((\\w+)\\)")
 
 # Saving Data ==================================================================
-write_csv(cleaned_programs, file = here("data", "cleaned_programs.csv"))
+write_csv(cleaned_programs, file = here("data", "clean", "programs.csv"))

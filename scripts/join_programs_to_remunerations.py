@@ -8,9 +8,9 @@ from collections import defaultdict
 
 # Constants
 DATA = Path(__file__).parents[1] / "data"
-REMUNERATIONS = DATA / "cleaned_remunerations.csv"
-UBC_GRAD_PROGRAMS = DATA / "cleaned_programs.csv"
-SUPERVISORS = DATA / "supervisors_by_program.json"
+REMUNERATIONS = DATA / "clean" / "all_remunerations.csv"
+UBC_GRAD_PROGRAMS = DATA / "clean" / "programs.csv"
+SUPERVISORS = DATA / "clean" / "supervisors_by_program.json"
 
 # Loading Data
 with SUPERVISORS.open(mode="r") as f:
@@ -56,5 +56,5 @@ if __name__ == "__main__":
     )
 
     remunerations[["name", "remuneration", "expenses", "appointment"]].to_csv(
-        DATA / "supervisor_remunerations.csv"
+        DATA / "clean" / "supervisor_remunerations.csv"
     )
