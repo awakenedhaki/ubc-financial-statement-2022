@@ -17,4 +17,4 @@ cleaned_programs <- programs %>%
           regex = "(.*) \\((\\w+)\\)")
 
 # Saving Data ==================================================================
-write_csv(cleaned_programs, file = here("data", "clean", "programs.csv"))
+write_csv(cleaned_programs, file = here("data", "processed", "programs.csv"))
