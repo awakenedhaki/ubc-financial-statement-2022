@@ -76,38 +76,43 @@ async def scrape_employees(page, start, end):
         name = normalize_name(name)
 
         logging.info(f"Normalized employee name: {name}.")
-        search_employee(page, name)
+        await search_employee(page, name)
         sleep(1)
 
-        if employee_match_found(page):
+        if await employee_match_found(page):
             logging.info(f"Parsing HTML for {name}.")
-            soup = BeautifulSoup(page.content(), "html.parser")
+            soup = BeautifulSoup(await page.content(), "html.parser")
         else:
             logging.warning(f"No matches for {name}")
             results[name] = []
-            reset_page(page)
+            await reset_page(page)
             continue
         results[name].append(parse_results(soup))
 
         logging.info("Preparing for next employee.")
         sleep(3)
-        reset_page(page)
+        await reset_page(page)
+    return results
+
+
+async def main(start, end):
+    logging.info("Initiating employee directory scraping.")
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=False)
+        context = await browser.new_context()
+        page = await context.new_page()
+        await page.goto(DIRECTORY_URL)
+
+        results = await scrape_employees(page, start, end)
     return results
 
 
 if __name__ == "__main__":
-    logging.info("Initiating employee directory scraping.")
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
-        context = browser.new_context()
-        page = context.new_page()
-        page.goto(DIRECTORY_URL)
-
-        results = main(page, start=0, end=10)
+    results = asyncio.run(main(start = 0, end = 2))
 
     with EMPLOYEES.open(mode="r") as f:
         employees = json.load(f)
 
-    with EMPLOYEES.open(mode="a") as f:
-        employees = employees.append(results)
+    with EMPLOYEES.open(mode="w") as f:
+        employees.append(results)
         json.dump(employees, f)
