@@ -40,7 +40,8 @@ def reset_page(page):
 
 
 def employee_match_found(page):
-    pass
+    selector = page.query_selector("#warning")
+    return selector is None
 
 
 def parse_results(soup):
@@ -75,18 +76,25 @@ def main(page, start, end):
 
         logging.info(f"Normalized employee name: {name}.")
         search_employee(page, name)
+        sleep(1)
 
-        logging.info(f"Parsing HTML for {name}.")
-        soup = BeautifulSoup(page.content(), "html.parser")
-        sleep(3)
-
+        if employee_match_found(page):
+            logging.info(f"Parsing HTML for {name}.")
+            soup = BeautifulSoup(page.content(), "html.parser")
+        else:
+            logging.warning(f"No matches for {name}")
+            reset_page(page)
+            continue
         results[name].append(parse_results(soup))
+
         logging.info("Preparing for next employee.")
+        sleep(3)
         reset_page(page)
     return results
 
 
 if __name__ == "__main__":
+    logging.info("Initiating employee directory scraping.")
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)
         context = browser.new_context()
