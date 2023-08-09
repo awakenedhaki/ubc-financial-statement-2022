@@ -83,6 +83,7 @@ def main(page, start, end):
             soup = BeautifulSoup(page.content(), "html.parser")
         else:
             logging.warning(f"No matches for {name}")
+            results[name] = []
             reset_page(page)
             continue
         results[name].append(parse_results(soup))
