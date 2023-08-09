@@ -57,11 +57,11 @@ def normalize_name(name):
     name = name.casefold()
     name = re.sub(pattern=r"^\w(\s)\w+", repl="'", string=name)
     name = re.sub(pattern=r"\s\w\.", repl="", string=name)
+    name = re.match(pattern=r"(^[\w'\-\.\s]+, \w+).*", string=name).group(1)
     return name
 
 
 def main(page, start, end):
-    logging.info("Initiating employee directory scraping.")
     logging.info(f"Employee window: {start}, {end}")
     employee_names = (
         pd.read_csv(DATA / "processed" / "all_remunerations.csv")
