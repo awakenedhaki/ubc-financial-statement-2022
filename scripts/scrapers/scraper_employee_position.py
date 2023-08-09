@@ -104,5 +104,9 @@ if __name__ == "__main__":
 
         results = main(page, start=0, end=10)
 
+    with EMPLOYEES.open(mode="r") as f:
+        employees = json.load(f)
+
     with EMPLOYEES.open(mode="a") as f:
-        json.dump(results, f)
+        employees = employees.append(results)
+        json.dump(employees, f)
