@@ -36,21 +36,15 @@ def search_employee(page, employee_name):
 
 
 def reset_page(page):
-    # TODO: Need to go back to form
-    page.get_by_text("Home").click()
+    page.locator(':nth-match(a:has-text("Home"), 1)').click()
 
 
 def employee_match_found(page):
-    warning = page.query_selector("#warning")
-    if warning is not None:
-        warning = warning.inner_text().strip()
-        return re.match(pattern="Sorry, but no matches were found", string=warning)
-    else:
-        return False
+    pass
 
 
 def parse_results(soup):
-    rows = soup.find(attr={"class": "results"}).find_all(name="tr")
+    rows = soup.find(attrs={"class": "results"}).find("tbody").find_all(name="tr")
     results = []
     for row in rows:
         data = [cell.get_text().strip() for cell in row.find_all(name="td")]
@@ -76,16 +70,18 @@ def main(page, start, end):
 
     results = defaultdict(list)
     for name in employee_names[start:end]:
-        logging.info(f"Scraping employee: {name}")
+        logging.info(f"Scraping employee: {name}.")
         name = normalize_name(name)
-        logging.info(f"Normalized employee name: {name}")
+
+        logging.info(f"Normalized employee name: {name}.")
         search_employee(page, name)
-        if not employee_match_found(page):
-            logging.warn(f"No name match for: {name}")
-            continue
-        soup = BeautifulSoup(page.content, "html.parser")
+
+        logging.info(f"Parsing HTML for {name}.")
+        soup = BeautifulSoup(page.content(), "html.parser")
         sleep(3)
+
         results[name].append(parse_results(soup))
+        logging.info("Preparing for next employee.")
         reset_page(page)
     return results
 
