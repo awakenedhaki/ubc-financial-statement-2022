@@ -1,6 +1,7 @@
 # Loading Libraries
 import re
 import json
+import asyncio
 import logging
 import pandas as pd
 
@@ -8,7 +9,7 @@ from time import sleep
 from pathlib import Path
 from bs4 import BeautifulSoup
 from collections import defaultdict
-from playwright.sync_api import sync_playwright
+from playwright.async_api import async_playwright
 
 # Constants
 DATA = Path(__file__).parents[2] / "data"
@@ -30,17 +31,17 @@ logging.getLogger("").addHandler(console)
 
 
 # Helper Functions
-def search_employee(page, employee_name):
-    page.locator('input[name="keywords"]').fill(employee_name)
-    page.locator("#personAll").click()
+async def search_employee(page, employee_name):
+    await page.locator('input[name="keywords"]').fill(employee_name)
+    await page.locator("#personAll").click()
 
 
-def reset_page(page):
-    page.locator(':nth-match(a:has-text("Home"), 1)').click()
+async def reset_page(page):
+    await page.locator(':nth-match(a:has-text("Home"), 1)').click()
 
 
-def employee_match_found(page):
-    selector = page.query_selector("#warning")
+async def employee_match_found(page):
+    selector = await page.query_selector("#warning")
     return selector is None
 
 
@@ -61,7 +62,7 @@ def normalize_name(name):
     return name
 
 
-def main(page, start, end):
+async def scrape_employees(page, start, end):
     logging.info(f"Employee window: {start}, {end}")
     employee_names = (
         pd.read_csv(DATA / "processed" / "all_remunerations.csv")
