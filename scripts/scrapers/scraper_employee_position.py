@@ -31,6 +31,29 @@ logging.getLogger("").addHandler(console)
 
 
 # Helper Functions
+def normalize_name(name):
+    """
+    Normalize a given name by applying a series of transformations.
+
+    Args:
+        name (str): The name to be normalized.
+
+    Returns:
+        str: The normalized name.
+
+    Description:
+        This function takes a name as input and applies a series of transformations to normalize it.
+        The transformations include converting the name to lowercase, removing middle initials, truncating titles,
+        and removing non-alphanumeric characters from the end of the name.
+        The function returns the normalized name.
+    """
+    name = name.casefold()
+    name = re.sub(pattern=r"^\w(\s)\w+", repl="'", string=name)
+    name = re.sub(pattern=r"\s\w\.", repl="", string=name)
+    name = re.match(pattern=r"(^[\w'\-\.\s]+(, \w+)?).*", string=name).group(1)
+    return name
+
+
 async def search_employee(page, employee_name):
     """
     Perform a search for a specific employee name on the UBC directory website using Playwright.
@@ -70,21 +93,6 @@ async def search_employee(page, employee_name):
     await page.locator("#personAll").click()
 
 
-async def reset_page(page):
-    """
-    Reset the current web page to the home page of the UBC directory website using Playwright.
-
-    Args:
-        page (Page): An instance of a Playwright Page representing the web page to be reset.
-
-    Description:
-        This asynchronous function resets the current web page to the home page of the UBC directory website.
-        It uses Playwright's API to locate and click on the "Home" link in the page's navigation menu.
-        This action takes the user back to the main directory page.
-    """
-    await page.locator(':nth-match(a:has-text("Home"), 1)').click()
-
-
 async def employee_match_found(page):
     """
     Check if a match for the employee search was found on the UBC directory search results page.
@@ -105,27 +113,19 @@ async def employee_match_found(page):
     return selector is None
 
 
-def normalize_name(name):
+async def reset_page(page):
     """
-    Normalize a given name by applying a series of transformations.
+    Reset the current web page to the home page of the UBC directory website using Playwright.
 
     Args:
-        name (str): The name to be normalized.
-
-    Returns:
-        str: The normalized name.
+        page (Page): An instance of a Playwright Page representing the web page to be reset.
 
     Description:
-        This function takes a name as input and applies a series of transformations to normalize it.
-        The transformations include converting the name to lowercase, removing middle initials, truncating titles,
-        and removing non-alphanumeric characters from the end of the name.
-        The function returns the normalized name.
+        This asynchronous function resets the current web page to the home page of the UBC directory website.
+        It uses Playwright's API to locate and click on the "Home" link in the page's navigation menu.
+        This action takes the user back to the main directory page.
     """
-    name = name.casefold()
-    name = re.sub(pattern=r"^\w(\s)\w+", repl="'", string=name)
-    name = re.sub(pattern=r"\s\w\.", repl="", string=name)
-    name = re.match(pattern=r"(^[\w'\-\.\s]+(, \w+)?).*", string=name).group(1)
-    return name
+    await page.locator(':nth-match(a:has-text("Home"), 1)').click()
 
 
 def parse_results(soup):
