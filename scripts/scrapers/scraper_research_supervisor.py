@@ -107,6 +107,24 @@ def parse_supervisors(supervisors_html):
         yield parse_supervisor(supervisor_html)
 
 
+def scrape_supervisors_page(url):
+    try:
+        with requests.get(url) as response:
+            response.raise_for_status()
+            soup = BeautifulSoup(response.content, "html.parser")
+    except (requests.exceptions.HTTPError, requests.exceptions.RequestException) as e:
+        logging.error(f"Error: {e}")
+        return None
+    return soup
+
+
+def extract_supervisor_tags(soup):
+    supervisors_div = soup.find(name="div", attrs={"class": RESEARCHERS_VIEW})
+    if supervisors_div:
+        return supervisors_div.find(attrs={"class": CONTENT_VIEW}).find_all(name="li")
+    return []
+
+
 def scrape_supervisors(url):
     """
     Scrape research supervisor information from a given URL.
@@ -130,34 +148,19 @@ def scrape_supervisors(url):
     """
     supervisors_list = []
     next_page = True
-    while next_page:
-        try:
-            with requests.get(url) as response:
-                response.raise_for_status()
-                soup = BeautifulSoup(response.content, "html.parser")
-        except (
-            requests.exceptions.HTTPError,
-            requests.exceptions.RequestException,
-        ) as e:
-            logging.error(f"Error: {e}")
-            return supervisors_list
 
-        supervisors = soup.find(name="div", attrs={"class": RESEARCHERS_VIEW})
-        if supervisors is not None:
-            supervisors_list.extend(
-                [
-                    parse_supervisor(supervisor_html)
-                    for supervisor_html in supervisors.find(
-                        attrs={"class": CONTENT_VIEW}
-                    ).find_all(name="li")
-                ]
-            )
-        else:
-            logging.warning("Supervisors list not found on the page.")
+    while next_page:
+        soup = scrape_supervisors_page(url)
+        if soup is None:
             break
 
+        supervisor_tags = extract_supervisor_tags(soup)
+        supervisors_list.extend(
+            parse_supervisor(supervisor_html) for supervisor_html in supervisor_tags
+        )
+
         next_page_path = soup.find(attrs={"class": NEXT_PAGE})
-        if next_page_path is not None:
+        if next_page_path:
             url = BASE_URL + next_page_path.a["href"]
             logging.info(f"Scraping next page: {url}")
         else:
