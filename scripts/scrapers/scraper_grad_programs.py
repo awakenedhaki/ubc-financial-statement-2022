@@ -11,6 +11,29 @@ UBC_GRAD_PROGRAMS = "/prospective-students/graduate-degree-programs"
 
 # Helper Functions
 def pluck(series, index):
+    """
+    Extract a specific element from each element of a pandas Series.
+
+    Args:
+        series (pd.Series): A pandas Series containing elements from which to extract values.
+        index (int): The index of the element to extract from each element of the Series.
+
+    Returns:
+        pd.Series: A new pandas Series containing the extracted values.
+
+    Description:
+        This function takes a pandas Series `series` and an `index` as input and applies a lambda function to each
+        element of the Series. The lambda function extracts the value at the specified `index` from each element.
+        The function returns a new pandas Series containing the extracted values.
+
+    Example:
+        data_series = pd.Series([["John", "Doe"], ["Jane", "Smith"]])
+        result_series = pluck(data_series, 0)
+        print(result_series)  # Output: [John, Alice]
+
+    Note:
+        The `series` argument is expected to contain elements that are indexable, such as lists or tuples.
+    """
     return series.apply(lambda x: x[index])
 
 
