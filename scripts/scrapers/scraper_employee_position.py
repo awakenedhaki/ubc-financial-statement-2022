@@ -132,7 +132,7 @@ def parse_results(soup):
         for row in rows:
             data = [cell.get_text().strip() for cell in row.find_all(name="td")]
             results.append(data)
-        return data
+        return results
 
 
 def normalize_name(name):
@@ -205,7 +205,7 @@ async def scrape_employees(page, start, end):
         if results_table is None:
             results[name] = []
         else:
-            results[name].append(parse_results(soup))
+            results[name] = parse_results(soup)
 
         logging.info("Preparing for next employee.")
         await asyncio.sleep(2)
@@ -246,7 +246,7 @@ async def main(start, end):
 
 
 if __name__ == "__main__":
-    START, END = 7000, 7357
+    START, END = 0, 3500
     logging.info(f"Employee window: {START}, {END}")
     results = asyncio.run(main(start=START, end=END))
 
