@@ -94,4 +94,4 @@ if __name__ == "__main__":
     supervisor_flag = remunerations["appointment"].apply(lambda value: value != "")
     remunerations[["name", "remuneration", "expenses", "appointment"]].loc[
         supervisor_flag
-    ].to_csv(DATA / "processed" / "supervisor_remunerations.csv")
+    ].to_csv(DATA / "processed" / "supervisor_remunerations.csv", index=False)
