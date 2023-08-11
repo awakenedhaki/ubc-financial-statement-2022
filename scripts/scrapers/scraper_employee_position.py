@@ -211,7 +211,7 @@ async def main(start, end):
 
 
 if __name__ == "__main__":
-    START, END = 6000, 7000
+    START, END = 7000, 7356
     logging.info(f"Employee window: {START}, {END}")
     results = asyncio.run(main(start=START, end=END))
 
