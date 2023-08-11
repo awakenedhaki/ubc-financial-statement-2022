@@ -9,7 +9,7 @@ from collections import defaultdict
 # Constants
 DATA = Path(__file__).parents[2] / "data"
 REMUNERATIONS = DATA / "processed" / "all_remunerations.csv"
-UBC_GRAD_PROGRAMS = DATA / "processed" / "programs.csv"
+UBC_GRAD_PROGRAMS = DATA / "processed" / "ubc_grad_programs.csv"
 SUPERVISORS = DATA / "references" / "supervisors_by_program.json"
 
 # Loading Data
@@ -94,4 +94,4 @@ if __name__ == "__main__":
     supervisor_flag = remunerations["appointment"].apply(lambda value: value != "")
     remunerations[["name", "remuneration", "expenses", "appointment"]].loc[
         supervisor_flag
-    ].to_csv(DATA / "processed" / "supervisor_remunerations.csv", index=False)
+    ].to_csv(DATA / "processed" / "research_supervisor_remunerations.csv", index=False)
