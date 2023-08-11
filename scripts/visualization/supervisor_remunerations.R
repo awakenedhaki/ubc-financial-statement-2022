@@ -12,7 +12,7 @@ theme_set(theme_minimal())
 theme_update(panel.border = element_rect(color = "black", fill = "transparent"))
 
 # Loading Data =================================================================
-remunerations <- read_csv(here(DATA, "supervisor_remunerations.csv"))
+remunerations <- read_csv(here(DATA, "research_supervisor_remunerations.csv"))
 
 # Visualizations ===============================================================
 # # Top 10 Remunerations
