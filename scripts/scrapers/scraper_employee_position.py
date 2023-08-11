@@ -47,6 +47,7 @@ def normalize_name(name):
         and removing non-alphanumeric characters from the end of the name.
         The function returns the normalized name.
     """
+    logging.info(f"Normalized employee name: {name}.")
     name = name.casefold()
     name = re.sub(pattern=r"^\w(\s)\w+", repl="'", string=name)
     name = re.sub(pattern=r"\s\w\.", repl="", string=name)
@@ -88,6 +89,7 @@ async def search_employee(page, employee_name):
         This function assumes that the provided `page` instance is already navigated to the UBC directory website
         (specified by the `DIRECTORY_URL` constant) before calling the `search_employee` function.
     """
+    logging.info(f"Scraping employee: {employee_name}.")
     await page.locator('input[name="keywords"]').fill(employee_name)
     await asyncio.sleep(1)
     await page.locator("#personAll").click()
@@ -159,10 +161,8 @@ def parse_results(soup):
 
 
 async def scrape_employee_info(page, name):
-    logging.info(f"Normalized employee name: {name}.")
     normalized_name = normalize_name(name)
 
-    logging.info(f"Scraping employee: {name}.")
     await search_employee(page, normalized_name)
 
     if await employee_match_found(page):
@@ -211,7 +211,7 @@ async def main(start, end):
 
 
 if __name__ == "__main__":
-    START, END = 0, 2
+    START, END = 6000, 7000
     logging.info(f"Employee window: {START}, {END}")
     results = asyncio.run(main(start=START, end=END))
 
