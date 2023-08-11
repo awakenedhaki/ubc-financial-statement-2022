@@ -6,8 +6,7 @@ The University of British Columbia (UBC) releases financial statements each year
 
 The financial reports can be found here: <https://finance.ubc.ca/reporting-planning-analysis/financial-reports>
 
-The data itself is not stored in this repo, and will have to be downloaded from the above link. The code mapping the PDF tables into tibbles is provided [here](https://github.com/awakenedhaki/ubc-financial-statement-2022/blob/master/R/cleaning.R).
+Additional data is scraped from:
 
-At a high-level, the data collection and preprocessing pipeline is:
-
-![Data Pipeline](assets/data-flow.svg)
+1. [UBC Graduate Programs](https://www.grad.ubc.ca/prospective-students/graduate-degree-programs): Names of research supervisors associated with graduate programs.
+2. [UBC Directory](https://directory.ubc.ca/index.cfm): The directory of UBC Faculty and Staff associating employee names to their job titles.
