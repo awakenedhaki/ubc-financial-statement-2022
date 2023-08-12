@@ -30,3 +30,5 @@ Platform: aarch64-apple-darwin20 (64-bit)
 | tidyverse      | 2.0.0         | Data science packages            | https://www.tidyverse.org/                             |
 | scales         | 1.2.1         | Perceptual scaling               | https://scales.r-lib.org/                              |
 | here           | 1.0.1         | System path hadling              | https://here.r-lib.org/                                |
+| black          | 23.7.0        | Code formatter                   | https://black.readthedocs.io/                          |
+| click          | 8.1.3         | Command line interface builder   | https://click.palletsprojects.com/en/8.1.x/            |
