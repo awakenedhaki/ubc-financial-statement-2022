@@ -6,7 +6,8 @@ The University of British Columbia (UBC) releases financial statements each year
 
 The financial reports can be found here: <https://finance.ubc.ca/reporting-planning-analysis/financial-reports>
 
-Additional data is scraped from:
+The project's codebase is structured as in three main repositories:
 
-1. [UBC Graduate Programs](https://www.grad.ubc.ca/prospective-students/graduate-degree-programs): Names of research supervisors associated with graduate programs.
-2. [UBC Directory](https://directory.ubc.ca/index.cfm): The directory of UBC Faculty and Staff associating employee names to their job titles.
+1. `scripts`: The scripts directory contains the code used for scraping, processing, and visualizing the data. Web scraping is performed using `requests` or `playwright`. Visualization is performed using `ggplot2`. The processing of data is a combination of the `tidyverse` and `pandas`.
+2. `notebooks`: Jupyter notebooks are used as a simple platform to inspect data that has been generate, scraped, or processed. The data processing or collection does not occur within the notebooks.
+3. `cli`: Command-line interfaces were implemented using `click` to stream line manual corrections of the data sets being generated.
