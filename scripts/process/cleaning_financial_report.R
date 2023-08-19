@@ -8,16 +8,18 @@ library(tidyverse)
 
 # Loading Data =================================================================
 statement <- pdf_text(here("data", "/FY22 UBC Statement of Financial Information.pdf"))
-raw_remunerations <- statement[str_detect(string = statement, 
-                                          pattern = "Name[:blank:]*Remuneration[:blank:]*")]
+raw_remunerations <- statement[str_detect(
+  string = statement,
+  pattern = "Name[:blank:]*Remuneration[:blank:]*"
+)]
 
 # Helper Functions =============================================================
 remove_surrounding_text <- function(page) {
   trim_left_idx <- page %>%
-    str_locate(pattern = "Expenses\\*\n{1,}") 
+    str_locate(pattern = "Expenses\\*\n{1,}")
 
   trim_right_idx <- page %>%
-    str_locate(pattern = "(Earnings greater than)|(Page \\|)") 
+    str_locate(pattern = "(Earnings greater than)|(Page \\|)")
 
   page %>%
     substring(first = trim_left_idx[, 2], last = trim_right_idx[, 1] - 1) %>%
@@ -40,8 +42,8 @@ normalize_table <- function(page) {
 
 normalize_rows <- function(page) {
   page %>%
-    str_replace(pattern = "^(\\w+)[:blank:]{2,}([A-Z])",       replacement = "\\1\n\\2") %>%
-    str_replace(pattern = "[:blank:]\\-[:blank:]",      replacement = "\\-\n") %>%
+    str_replace(pattern = "^(\\w+)[:blank:]{2,}([A-Z])", replacement = "\\1\n\\2") %>%
+    str_replace(pattern = "[:blank:]\\-[:blank:]", replacement = "\\-\n") %>%
     str_replace(pattern = "(\\d+)[:blank:]{2,}([A-z])", replacement = "\\1\n\\2") %>%
     str_split(pattern = "\n", simplify = FALSE) %>%
     unlist() %>%
@@ -65,12 +67,12 @@ fill_missing_first_names <- function(page) {
     } else if (!is.na(missing_first_name) & ends_with_character(page[i])) {
       page[missing_first_name] <- page[missing_first_name] %>%
         str_replace(pattern = "([a-z],)", replacement = glue("\\1 {page[i]}"))
-      
+
       missing_first_name <- NA
-      flagged_rows <-c(flagged_rows, i)
+      flagged_rows <- c(flagged_rows, i)
     }
   }
-  
+
   if (length(flagged_rows) == 0) {
     return(page)
   }
@@ -90,11 +92,13 @@ to_tibble <- function(table) {
 ambiguous_floating_name <- function(tbl) {
   tbl %>%
     mutate(ambiguous_name = ifelse(str_detect(name, "^\\w+([,\\s]{1,2}\\w+)?$") & is.na(remuneration),
-                                   name, 
-                                   NA))  %>%
+      name,
+      NA
+    )) %>%
     mutate(ambiguous_name = vec_fill_missing(ambiguous_name,
-                                             direction = "up",
-                                             max_fill = 2))
+      direction = "up",
+      max_fill = 2
+    ))
 }
 
 # Parsing Remunerations ========================================================
@@ -109,7 +113,7 @@ remunerations <- raw_remunerations %>%
       fill_missing_first_names() %>%
       to_tibble() %>%
       ambiguous_floating_name()
-  }) 
+  })
 
 # Manual Checks ================================================================
 # # Missing name
@@ -124,7 +128,7 @@ remunerations %>%
   lapply(FUN = \(x) {
     x %>%
       filter(remuneration < 75000)
-  }) 
+  })
 
 # # Missing remunerations
 remunerations %>%
@@ -146,7 +150,7 @@ remunerations %>%
     x %>%
       mutate(is_numeric_name = str_detect(name, "\\d+")) %>%
       filter(is_numeric_name)
-  }) 
+  })
 
 # Removing missing remunerations ===============================================
 remunerations %>%
