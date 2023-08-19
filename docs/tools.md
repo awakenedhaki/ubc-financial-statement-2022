@@ -7,7 +7,6 @@ Platform: aarch64-apple-darwin20 (64-bit)
 | R              | 4.3.1         | Data wrangling and visualization | https://docs.posit.co/resources/snippets/r-versions/   |
 | beautifulsoup4 | 4.12.2        | HTML parsing                     | https://www.crummy.com/software/BeautifulSoup/bs4/doc/ |
 | pandas         | 2.0.3         | Data wrangling                   | https://pandas.pydata.org/docs/index.html              |
-| requests       | 2.28.1        | HTTP requests                    | https://requests.readthedocs.io/en/v2.3.0/             |
 | playwright     | 1.36          | Web automation                   | https://playwright.dev/python/docs/intro               |
 | Chromium       | 115.0.5790.75 | Web browser                      | https://www.chromium.org/chromium-projects/            |
 | RStudio        | 2023.06.0+421 | IDE                              | https://docs.posit.co/?version=2023.06.0               |
