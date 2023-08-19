@@ -8,6 +8,7 @@ from pathlib import Path
 # Constants
 DATA = Path(__file__).parents[2] / "data" / "all_remunerations.csv"
 
+
 # Helper Functions
 def load_unresolved_rows(path):
     df = pd.read_csv(DATA)
