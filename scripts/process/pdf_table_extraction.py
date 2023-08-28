@@ -109,6 +109,6 @@ if __name__ == "__main__":
             pages=parameters["page_numbers"],
             table_measurements=table_measurements,
         )
-        raw_remunerations_table = pd.concat([table, *parsed_tables])
+        raw_remunerations_table = pd.concat([raw_remunerations_table, *parsed_tables])
 
     raw_remunerations_table.to_csv(OUTPUT, index=False)
