@@ -1,3 +1,8 @@
+# TODO:
+# 1. Select Top 10
+# 2. Focus on Vancouver
+# 3. Only first and last name
+
 # Loading Libraries
 import re
 import json
