@@ -87,6 +87,7 @@ def select_retained_result(ambiguous_employees):
         else:
             retained_results[name] = results[index]
         click.clear()
+    return retained_results
 
 
 # Main Function
