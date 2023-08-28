@@ -38,7 +38,12 @@ def match_orphaned_names(df, column):
         parent_name = adopted_names_df.loc[location - offset, column]
         orphan_name = df.loc[location, column]
 
-        adopted_names_df.at[location - offset, column] = f"{parent_name} {orphan_name}"
+        if parent_name.endswith("-"):
+            combined_name = f"{parent_name}{orphan_name}"
+        else:
+            combined_name = f"{parent_name} {orphan_name}"
+
+        adopted_names_df.at[location - offset, column] = combined_name
         previous_location = location
 
     return adopted_names_df
