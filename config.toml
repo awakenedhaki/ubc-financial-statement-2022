@@ -1,0 +1,25 @@
+[table_measurements]
+    [table_measurements.first_page]
+        top = 3.33
+        bottom = 10
+    [table_measurements.middle_section]
+        top = 1.3
+        bottom = 10
+    [table_measurements.last_page]
+        top = 1.3
+        bottom = 3
+    [table_measurements.widths]
+        [table_measurements.widths.left]
+            left = 0.7
+            right = 4.5
+        [table_measurements.widths.right]
+            left = 4.45
+            right = 8
+        
+[sections]
+    [sections.first_page]
+        page_numbers = "1"
+    [sections.middle_section]
+        page_numbers = "2-121"
+    [sections.last_page]
+        page_numbers = "122"
