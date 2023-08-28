@@ -104,15 +104,34 @@ def process_table(table: pd.DataFrame) -> pd.DataFrame:
         table (pd.DataFrame): The input DataFrame representing a table.
 
     Returns:
-        pd.DataFrame: A processed DataFrame after cleaning, filtering, name matching, and NaN replacement.
+        pd.DataFrame: A processed DataFrame after cleaning, filtering, name matching, NaN replacement,
+        thousand separator removal, and type casting
     """
+    # Step 1: Normalize column names
     cleaned_df = clean_column_names(table)
-    drop_empty_rows_df = cleaned_df[~search_empty_rows(cleaned_df)].reset_index(
-        drop=True
-    )
-    matched_names_df = match_orphaned_names(drop_empty_rows_df, column="name")
+
+    # Step 2: Remove rows that are entirely NaN
+    non_empty_rows_df = cleaned_df.dropna(how="all").reset_index(drop=True)
+
+    # Step 3: Match orphaned names
+    matched_names_df = match_orphaned_names(non_empty_rows_df, column="name")
+
+    # Step 4: Replace specific values with NaN
     na_replace_df = na_if(matched_names_df, column="expenses", value="-")
-    return na_replace_df
+
+    # Step 5: Remove thousand separator from numeric values
+    numeric_columns = ["remuneration", "expenses"]
+    na_replace_df[numeric_columns] = na_replace_df[numeric_columns].replace(
+        ",", "", regex=True
+    )
+
+    # Step 6: Type casting columns
+    type_casted_df = na_replace_df.astype(
+        dtype={"remuneration": "int32", "expenses": "int32"},
+        errors="ignore",  # Prevent ValueError from casting NaN values
+    )
+
+    return type_casted_df
 
 
 def process_tables(tables: List[pd.DataFrame]) -> List[pd.DataFrame]:
