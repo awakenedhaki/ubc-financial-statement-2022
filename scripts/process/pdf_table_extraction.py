@@ -120,8 +120,8 @@ def process_table(table: pd.DataFrame) -> pd.DataFrame:
         table (pd.DataFrame): The input DataFrame representing a table.
 
     Returns:
-        pd.DataFrame: A processed DataFrame after cleaning, filtering, name matching, NaN replacement,
-        thousand separator removal, and type casting
+        pd.DataFrame: A processed DataFrame after cleaning, filtering, name matching,
+        NaN replacement, thousand separator removal, type casting, and name splitting.
     """
     # Step 1: Normalize column names
     cleaned_df = clean_column_names(table)
