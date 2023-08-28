@@ -56,7 +56,7 @@ def na_if(df, column, value):
 
 def process_table(table):
     cleaned_df = clean_column_names(table)
-    drop_empty_rows_df = cleaned_df[~search_empty_rows(cleaned_df)]
+    drop_empty_rows_df = cleaned_df[~search_empty_rows(cleaned_df)].reset_index(drop=True)
     matched_names_df = match_orphaned_names(drop_empty_rows_df, column="name")
     na_replace_df = na_if(matched_names_df, column="expenses", value="-")
     return na_replace_df
