@@ -96,6 +96,22 @@ def na_if(df: pd.DataFrame, column: str, value) -> pd.DataFrame:
     return df
 
 
+def split_column(df: pd.DataFrame, column: str, delim: str) -> pd.DataFrame:
+    """
+    Split a DataFrame column into two columns using a specified delimiter.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing the column to split.
+        column (str): The name of the column to split.
+        delim (str): The delimiter used for splitting.
+
+    Returns:
+        pd.DataFrame: A new DataFrame with two columns, each containing
+        one part of the split values.
+    """
+    return df[column].str.split(pat=delim, n=1, expand=True)
+
+
 def process_table(table: pd.DataFrame) -> pd.DataFrame:
     """
     Process an individual table by applying a series of transformations.
@@ -129,6 +145,12 @@ def process_table(table: pd.DataFrame) -> pd.DataFrame:
     type_casted_df = na_replace_df.astype(
         dtype={"remuneration": "int32", "expenses": "int32"},
         errors="ignore",  # Prevent ValueError from casting NaN values
+    )
+
+    # Step 7: Split names into given and surname columns
+    name_columns = ["surnames", "given_names"]
+    type_casted_df[name_columns] = split_column(
+        type_casted_df, column="name", delim=", "
     )
 
     return type_casted_df
