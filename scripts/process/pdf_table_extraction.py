@@ -30,7 +30,6 @@ def match_orphaned_names(df, column):
     previous_location = -1
     offset = 1
     for location in orphan_location:
-        print(location)
         if previous_location == (location - 1):
             offset += 1
         else:
