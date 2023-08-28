@@ -18,7 +18,7 @@ def clean_column_names(df):
 
 
 def search_empty_rows(df):
-    return df.isnull().values.any(axis=1)
+    return df.isnull().values.all(axis=1)
 
 
 def match_orphaned_names(df, column):
