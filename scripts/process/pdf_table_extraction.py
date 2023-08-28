@@ -5,23 +5,54 @@ import numpy as np
 import pandas as pd
 
 from pathlib import Path
+from typing import Dict, Any, List
 
 # Constants
 DATA = Path.cwd() / "data"
 FINANCIAL_STATEMENT = DATA / "raw" / "remunerations.pdf"
 OUTPUT = DATA / "processed" / "all_remunerations.csv"
 
+
 # Helper Functions
-def clean_column_names(df):
+def clean_column_names(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Clean column names of a DataFrame by removing non-alphanumeric characters
+    and converting them to lowercase.
+
+    Args:
+        df (pd.DataFrame): The DataFrame with columns to be cleaned.
+
+    Returns:
+        pd.DataFrame: A new DataFrame with cleaned column names.
+    """
     df.columns = df.columns.str.replace(pat="\W", repl="", regex=True).str.casefold()
     return df
 
 
-def search_empty_rows(df):
+def search_empty_rows(df: pd.DataFrame) -> pd.Series:
+    """
+    Check for the presence of NaN values in each row of a DataFrame.
+
+    Args:
+        df (pd.DataFrame): The DataFrame to be checked.
+
+    Returns:
+        pd.Series: A boolean Series indicating if NaN values are present in each row.
+    """
     return df.isnull().values.all(axis=1)
 
 
-def match_orphaned_names(df, column):
+def match_orphaned_names(df: pd.DataFrame, column: str) -> pd.DataFrame:
+    """
+    Match orphaned names in a DataFrame by concatenating them with their preceding names.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing the names to be matched.
+        column (str): The column in the DataFrame containing the names.
+
+    Returns:
+        pd.DataFrame: The DataFrame with matched names.
+    """
     adopted_names_df = df.copy()
     is_orphaned_names = search_empty_rows(df.drop(columns=column, axis=1))
     adopted_names_df = adopted_names_df[~is_orphaned_names]
@@ -49,32 +80,94 @@ def match_orphaned_names(df, column):
     return adopted_names_df
 
 
-def na_if(df, column, value):
+def na_if(df: pd.DataFrame, column: str, value) -> pd.DataFrame:
+    """
+    Replace specified values in a DataFrame column with NaN values.
+
+    Args:
+        df (pd.DataFrame): The DataFrame to be modified.
+        column (str): The column in the DataFrame where replacement will be performed.
+        value: The value to be replaced with NaN.
+
+    Returns:
+        pd.DataFrame: The modified DataFrame.
+    """
     df[column] = df[column].replace(to_replace=value, value=np.nan)
     return df
 
 
-def process_table(table):
+def process_table(table: pd.DataFrame) -> pd.DataFrame:
+    """
+    Process an individual table by applying a series of transformations.
+
+    Args:
+        table (pd.DataFrame): The input DataFrame representing a table.
+
+    Returns:
+        pd.DataFrame: A processed DataFrame after cleaning, filtering, name matching, and NaN replacement.
+    """
     cleaned_df = clean_column_names(table)
-    drop_empty_rows_df = cleaned_df[~search_empty_rows(cleaned_df)].reset_index(drop=True)
+    drop_empty_rows_df = cleaned_df[~search_empty_rows(cleaned_df)].reset_index(
+        drop=True
+    )
     matched_names_df = match_orphaned_names(drop_empty_rows_df, column="name")
     na_replace_df = na_if(matched_names_df, column="expenses", value="-")
     return na_replace_df
 
 
-def process_tables(tables):
+def process_tables(tables: List[pd.DataFrame]) -> List[pd.DataFrame]:
+    """
+    Process a list of tables by applying process_table to each table.
+
+    Args:
+        tables (List[pd.DataFrame]): A list of input DataFrames, each representing a table.
+
+    Returns:
+        List[pd.DataFrame]: A list of processed DataFrames, each representing a processed table.
+    """
     return [process_table(table) for table in tables]
 
 
-def inch_to_point(inch):
+def inch_to_point(inch: float) -> float:
+    """
+    Convert inches to points, where 1 inch equals 72 points.
+
+    Args:
+        inch (float): Length in inches.
+
+    Returns:
+        float: Length in points.
+    """
     return inch * 72
 
 
-def inches_to_points(inches):
+def inches_to_points(inches: List[float]) -> List[float]:
+    """
+    Convert a list of lengths in inches to points using the inch_to_point function.
+
+    Args:
+        inches (List[float]): List of lengths in inches.
+
+    Returns:
+        List[float]: List of lengths in points.
+    """
     return [inch_to_point(inch) for inch in inches]
 
 
-def build_table_measurement(measurement, section, table):
+def build_table_measurement(
+    measurement: Dict[str, Any], section: str, table: str
+) -> List[float]:
+    """
+    Build table measurements for a specified section and table based on a measurement dictionary.
+
+    Args:
+        measurement (Dict[str, Any]): A dictionary containing measurement values.
+        section (str): The section name for which measurements are needed.
+        table (str): The table (e.g., "left" or "right") for which measurements are needed.
+
+    Returns:
+        List[float]: A list of table measurements: [top, left, bottom, right].
+    """
     return [
         measurement[section]["top"],
         measurement["widths"][table]["left"],
@@ -83,7 +176,21 @@ def build_table_measurement(measurement, section, table):
     ]
 
 
-def build_table_measurements(measurements, section):
+def build_table_measurements(
+    measurements: Dict[str, Any], section: str
+) -> List[List[float]]:
+    """
+    Build table measurements for both left and right tables in a specified section
+    based on a measurement dictionary.
+
+    Args:
+        measurements (Dict[str, Any]): A dictionary containing measurement values.
+        section (str): The section name for which measurements are needed.
+
+    Returns:
+        List[List[float]]: A list containing two lists of table measurements:
+        [[left_table_measurements], [right_table_measurements]].
+    """
     left_table = build_table_measurement(measurements, section, table="left")
     right_table = build_table_measurement(measurements, section, table="right")
     return [inches_to_points(left_table), inches_to_points(right_table)]
@@ -106,5 +213,5 @@ if __name__ == "__main__":
         )
         processed_tables = pd.concat(process_tables(raw_pdf_pages))
         tables.append(processed_tables)
-    
+
     pd.concat(tables).to_csv(OUTPUT, index=False)
