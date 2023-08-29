@@ -9,7 +9,7 @@ from typing import List
 
 # Constants
 DATA = Path.cwd() / "data"
-INPUT = DATA / "tmp" / "unprocessed_remunerations.csv"
+INPUT = DATA / "tmp" / "raw_remunerations.csv"
 OUTPUT = DATA / "processed" / "all_remunerations.csv"
 
 
@@ -27,6 +27,27 @@ def clean_column_names(df: pd.DataFrame) -> pd.DataFrame:
     """
     df.columns = df.columns.str.replace(pat="\W", repl="", regex=True).str.casefold()
     return df
+
+
+def build_employee_name(parent: str, orphan: str) -> str:
+    """
+    Concatenates two name parts into a complete employee name.
+
+    This function takes two strings, 'parent' and 'orphan', representing parts of an employee's name.
+    It combines these parts into a complete name with an optional space between them, based on the 'parent' string.
+    
+    Args:
+        parent (str): The left name part.
+        orphan (str): The right name part.
+        
+    Returns:
+        str: The combined employee name.
+    """
+    if parent.endswith("-"):
+        combined_name = f"{parent}{orphan}"
+    else:
+        combined_name = f"{parent} {orphan}"
+    return combined_name
 
 
 def search_empty_rows(df: pd.DataFrame) -> pd.Series:
@@ -68,13 +89,9 @@ def match_orphaned_names(df: pd.DataFrame, column: str) -> pd.DataFrame:
 
         parent_name = adopted_names_df.loc[location - offset, column]
         orphan_name = df.loc[location, column]
+        employee_name = build_employee_name(parent_name, orphan_name)
 
-        if parent_name.endswith("-"):
-            combined_name = f"{parent_name}{orphan_name}"
-        else:
-            combined_name = f"{parent_name} {orphan_name}"
-
-        adopted_names_df.at[location - offset, column] = combined_name
+        adopted_names_df.at[location - offset, column] = employee_name
         previous_location = location
 
     return adopted_names_df
