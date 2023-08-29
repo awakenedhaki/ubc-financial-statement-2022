@@ -9,7 +9,7 @@ from typing import Dict, Any, List
 # Constants
 DATA = Path.cwd() / "data"
 FINANCIAL_STATEMENT = DATA / "raw" / "remunerations.pdf"
-OUTPUT = DATA / "tmp" / "unprocessed_remunerations.csv"
+OUTPUT = DATA / "tmp" / "raw_remunerations.csv"
 
 
 # Helper Functions
