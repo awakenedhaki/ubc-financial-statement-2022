@@ -4,7 +4,6 @@ import pandas as pd
 
 from uuid import uuid4
 from pathlib import Path
-from typing import List
 
 
 # Constants
@@ -35,11 +34,11 @@ def build_employee_name(parent: str, orphan: str) -> str:
 
     This function takes two strings, 'parent' and 'orphan', representing parts of an employee's name.
     It combines these parts into a complete name with an optional space between them, based on the 'parent' string.
-    
+
     Args:
         parent (str): The left name part.
         orphan (str): The right name part.
-        
+
     Returns:
         str: The combined employee name.
     """
