@@ -7,7 +7,9 @@ from pathlib import Path
 from typing import Dict, Any, List
 
 # Constants
-DATA = Path.cwd() / "data"
+ROOT = Path.cwd()
+CONFIG_FILE = ROOT / "config.toml"
+DATA = ROOT / "data"
 FINANCIAL_STATEMENT = DATA / "raw" / "remunerations.pdf"
 OUTPUT = DATA / "tmp" / "raw_remunerations.csv"
 
@@ -82,8 +84,19 @@ def build_table_measurements(
 
 
 def extract_page_tables(
-    pdf_path: str, pages: str, table_measurements: List[List[float]]
+    pdf_path: str, pages: str, table_measurements: List[List[pd.DataFrame]]
 ):
+    """
+    Extract tables from a PDF file.
+
+    Args:
+        pdf_path (str): The path to the PDF file.
+        pages (str): Page numbers to extract tables from.
+        table_measurements (List[List[float]]): List of table measurements.
+
+    Returns:
+        List[pd.DataFrame]: List of DataFrames representing extracted tables.
+    """
     return tabula.read_pdf(
         pdf_path,
         pages=pages,
@@ -94,9 +107,22 @@ def extract_page_tables(
     )
 
 
+def load_config_file(config_file_path: str) -> Dict[str, Any]:
+    """
+    Load a TOML configuration file.
+
+    Args:
+        config_file_path (str): The path to the TOML configuration file.
+
+    Returns:
+        Dict[str, Any]: The loaded configuration as a dictionary.
+    """
+    with open(config_file_path, "rb") as f:
+        return tomllib.load(f)
+
+
 if __name__ == "__main__":
-    with (Path(__file__).parents[2] / "config.toml").open(mode="rb") as f:
-        config = tomllib.load(f)
+    config = load_config_file(CONFIG_FILE)
     TABLE_MEASUREMENTS = config["table_measurements"]
 
     raw_remunerations_table = pd.DataFrame()
