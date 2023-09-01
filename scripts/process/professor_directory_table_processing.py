@@ -114,6 +114,9 @@ def process_names(df: pd.DataFrame) -> pd.DataFrame:
 if __name__ == "__main__":
     # Load data
     data = pd.read_html(INPUT)[0]
+    
+    # Cleaning column names
+    cleaned_data = clean_column_names(data)
 
     # Extract name, title, and department
     cleaned_data = extract_name_title_department(data)
